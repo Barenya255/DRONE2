@@ -32,6 +32,7 @@ func NewGraphFromTXT_CUDA(selfId, workerNum, globalVertexSize int, comm *tools.C
 	reader := bufio.NewReader(G)
 	u := make([]tools.CInt, 0)
 	v := make([]tools.CInt, 0)
+	w := make([]tools.CInt, 0)
 	edgeSize := 0
 	for {
 		line, err := reader.ReadString('\n')
@@ -56,6 +57,7 @@ func NewGraphFromTXT_CUDA(selfId, workerNum, globalVertexSize int, comm *tools.C
 
 		u = append(u, tools.CInt(srcId))
 		v = append(v, tools.CInt(dstId))
+		w = append(w, tools.CInt(weight))
 		edgeSize += 1
 	}
 

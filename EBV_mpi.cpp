@@ -20,7 +20,7 @@ DEFINE_double(fault_weight, 0, "gmama value for minimal replicas");
 using namespace std;
 
 struct edge {
-    int u, v, degree;
+    int u, v, w, degree;
 }*e;
 
 int fnum, fid, maxn;
@@ -31,7 +31,7 @@ int *degree;
 bool *has;
 double alpha;
 int *rep;
-const int max_batch_size = 1000;
+const int max_batch_size = 13000;
 vector<pair<int, int> > assign_vec;
 
 int (*send_edge_buff)[max_batch_size * 10], (*receive_buff)[max_batch_size * 10], *send_count;
@@ -190,7 +190,7 @@ int main(int argc, char** argv) {
         fp = fopen(FLAGS_filename.c_str(), "r");
     }
 
-    int i, u, v, j, temp;
+    int i, u, v, w, j, temp;
     for (i = 0; i < fnum; i++) {
         edge_count[i] = 0;
         vertex_count[i] = 0;
@@ -213,17 +213,19 @@ int main(int argc, char** argv) {
         if (fid == 0) {
             for (i = 0; i < fnum; i++) send_count[i] = 0;
 
-            unsigned long long end_idx = min(read_idx + max_batch_size * 4 * fnum, alledges);
+            unsigned long long end_idx = min(read_idx + max_batch_size * 3 * fnum, alledges);
             for (unsigned long long idx = read_idx; idx < end_idx; idx++) {
-                fscanf(fp, "%d%d", &u, &v);
+                fscanf(fp, "%d%d%d", &u, &v, &w);
                 if (u == v) continue;
                 int rank = idx % fnum;
                 if (rank != 0) {
                     send_edge_buff[rank][send_count[rank]++] = u;
                     send_edge_buff[rank][send_count[rank]++] = v;
+                    send_edge_buff[rank][send_count[rank]++] = w;
                 } else {
                     e[edge_num].u = u;
                     e[edge_num].v = v;
+		    e[edge_num].w = w;
                     edge_num++;
                     degree[u]++;
                     degree[v]++;
@@ -235,14 +237,17 @@ int main(int argc, char** argv) {
 
         } else {
             MPI_Recv(receive_buff[0], max_batch_size * 10, MPI_INT, 0, 99, MPI_COMM_WORLD, status);
+
             int recv_len;
             MPI_Get_count(status, MPI_INT, &recv_len);
 
-            for (i = 0; i < recv_len; i += 2) {
+            for (i = 0; i < recv_len; i += 3) {
                 u = receive_buff[0][i];
                 v = receive_buff[0][i + 1];
+                w = receive_buff[0][i + 2];
                 e[edge_num].u = u;
                 e[edge_num].v = v;
+                e[edge_num].w = w;
                 edge_num++;
                 degree[u]++;
                 degree[v]++;
@@ -309,6 +314,7 @@ int main(int argc, char** argv) {
         for (int ind = sum_batch; ind < min(sum_batch + batch_size, edge_num); ind++) {
             u = e[ind].u;
             v = e[ind].v;
+	    w = e[ind].w;
             for (j = 0; j < fnum; j++) {
                 weight[j] = 0;
 //              if (!has_map[j][u]) {
@@ -323,11 +329,12 @@ int main(int argc, char** argv) {
                 }
                 weight[j] = weight[j] - alpha * edge_count[j] / edge_num - beta * vertex_count[j] / maxn * fnum;
             }
-            edge_idx += 2;
+            edge_idx += 3;
             weight[fid] += 0.1;
             int assign = find_max();
             send_edge_buff[assign][send_count[assign]++] = u;
             send_edge_buff[assign][send_count[assign]++] = v;
+            send_edge_buff[assign][send_count[assign]++] = w;
         }
         all2allsend(send_edge_buff, receive_buff, send_count, 0);
 
@@ -335,11 +342,12 @@ int main(int argc, char** argv) {
         for (i = 0; i < fnum; i++) {
             int len;
             MPI_Get_count(status + i, MPI_INT, &len);
-            for (j = 0; j < len; j += 2) {
+            for (j = 0; j < len; j += 3) {
                 u = receive_buff[i][j];
                 v = receive_buff[i][j + 1];
+                w = receive_buff[i][j + 2];
                 assign_vec.emplace_back(make_pair(u, v));   //写入文件
-                if (FLAGS_is_dump) fprintf(G, "%d %d\n", u, v);
+                if (FLAGS_is_dump) fprintf(G, "%d %d %d\n", u, v, w);
 
                 if (!has[u]) {
                     has[u] = true;
