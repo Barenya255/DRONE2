@@ -2,24 +2,24 @@ package worker
 
 import "C"
 import (
-	"algorithm"
+	"repo/algorithm"
 	"bufio"
 	"fmt"
 	"golang.org/x/net/context"
 	"google.golang.org/grpc"
-	"graph"
+	"repo/graph"
 	"io"
 	"log"
 	"math"
 	"net"
 	"os"
-	pb "protobuf"
+	pb "repo/protobuf"
 	"sort"
 	"strconv"
 	"strings"
 	"sync"
 	"time"
-	"tools"
+	"repo/tools"
 )
 
 func Generate(g graph.Graph) map[int]float32 {

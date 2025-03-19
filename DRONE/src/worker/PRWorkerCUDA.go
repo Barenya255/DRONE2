@@ -4,15 +4,15 @@ import (
 	"bufio"
 	"golang.org/x/net/context"
 	"google.golang.org/grpc"
-	"graph"
+	"repo/graph"
 	"io"
 	"log"
 	"net"
 	"os"
-	pb "protobuf"
+	pb "repo/protobuf"
 	"strings"
 	"time"
-	"tools"
+	"repo/tools"
 )
 
 type PRWorkerCUDA struct {

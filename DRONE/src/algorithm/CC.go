@@ -1,8 +1,8 @@
 package algorithm
 
 import (
-	"Set"
-	"graph"
+	"repo/Set"
+	"repograph"
 	"sort"
 	"time"
 )

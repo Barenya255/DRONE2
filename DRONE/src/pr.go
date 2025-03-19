@@ -5,8 +5,8 @@ import (
 	"log"
 	"os"
 	"strconv"
-	"tools"
-	"worker"
+	"repo/tools"
+	"repo/worker"
 )
 
 func main() {

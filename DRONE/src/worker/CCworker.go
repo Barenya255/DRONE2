@@ -1,23 +1,23 @@
 package worker
 
 import (
-	"Set"
-	"algorithm"
+	"repo/Set"
+	"repo/algorithm"
 	"bufio"
 	"golang.org/x/net/context"
 	"google.golang.org/grpc"
-	"graph"
+	"repo/graph"
 	"io"
 	"log"
 	"net"
 	"os"
-	pb "protobuf"
+	pb "repo/protobuf"
 	"sort"
 	"strconv"
 	"strings"
 	"sync"
 	"time"
-	"tools"
+	"repo/tools"
 )
 
 // rpc send has max size limit, so we spilt our transfer into many small block

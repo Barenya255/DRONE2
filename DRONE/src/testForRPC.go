@@ -1,7 +1,7 @@
 package main
 
 import (
-	"tools"
+	"repo/tools"
 )
 
 func main() {

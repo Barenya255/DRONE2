@@ -1,7 +1,7 @@
 package graph
 
 import (
-	"Set"
+	"repo/Set"
 	"bufio"
 	"fmt"
 	"io"
@@ -9,7 +9,7 @@ import (
 	"os"
 	"strconv"
 	"strings"
-	"tools"
+	"repo/tools"
 )
 
 func NewGraphFromTXT_CUDA(selfId, workerNum, globalVertexSize int, comm *tools.CComm) (*tools.CUDA_Graph, error) {

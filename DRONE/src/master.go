@@ -9,12 +9,12 @@ import (
 	"log"
 	"net"
 	"os"
-	pb "protobuf"
+	pb "repo/protobuf"
 	"strconv"
 	"strings"
 	"sync"
 	"time"
-	"tools"
+	"repo/tools"
 )
 
 type Master struct {

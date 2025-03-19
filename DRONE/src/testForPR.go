@@ -2,11 +2,11 @@ package main
 
 
 import (
-	"algorithm"
+	"repo/algorithm"
 	"fmt"
 	"log"
 	"os"
-	"graph"
+	"repo/graph"
 )
 
 func main() {

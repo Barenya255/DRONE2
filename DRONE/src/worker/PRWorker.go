@@ -1,24 +1,24 @@
 package worker
 
 import (
-	"Set"
-	"algorithm"
+	"repo/Set"
+	"repo/algorithm"
 	"bufio"
 	"fmt"
 	"golang.org/x/net/context"
 	"google.golang.org/grpc"
-	"graph"
+	"repo/graph"
 	"io"
 	"log"
 	"net"
 	"os"
-	pb "protobuf"
+	pb "repo/protobuf"
 	"sort"
 	"strconv"
 	"strings"
 	"sync"
 	"time"
-	"tools"
+	"repo/tools"
 )
 
 type PRWorker struct {

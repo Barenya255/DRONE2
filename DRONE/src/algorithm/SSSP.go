@@ -2,7 +2,7 @@ package algorithm
 
 import (
 	"container/heap"
-	"graph"
+	"repo/graph"
 	"time"
 	//"fmt"
 	"log"
