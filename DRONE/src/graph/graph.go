@@ -1,7 +1,7 @@
 package graph
 
 import (
-	"Set"
+	"repo/Set"
 	"bufio"
 	"os"
 
@@ -11,7 +11,7 @@ import (
 	"log"
 	"strconv"
 	"strings"
-	"tools"
+	"repo/tools"
 )
 
 // Node is vertex. The int64 must be unique within the graph.
