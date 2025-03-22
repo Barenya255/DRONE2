@@ -50,6 +50,11 @@ func NewGraphFromTXT_CUDA(selfId, workerNum, globalVertexSize int, comm *tools.C
 			fmt.Println(err)
 			log.Fatal("parse dst node id error")
 		}
+		weight, err := strconv.Atoi(strings.Split(paras[1], "\r")[0])
+		if err != nil {
+			fmt.Println(err)
+			log.Fatal("parse dst node id error")
+		}
 
 		//if srcId == 1386507 || dstId == 1386507 {
 		//	fmt.Printf("index:%v, srcID:%v, dstID:%v\n", len(u), srcId, dstId)
