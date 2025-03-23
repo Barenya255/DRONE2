@@ -21,12 +21,12 @@ func main() {
 	}
 	tools.SetDataPath(os.Args[3])
 
-	// is_rep := false
-	// if len(os.Args) == 5 && os.Args[4] == "rep" {
-	// 	is_rep = true
-	// }
-	// worker.RunSSSPWorker(workerID, PartitionNum, is_rep)
+	 is_rep := false
+	 if len(os.Args) == 5 && os.Args[4] == "rep" {
+	 	is_rep = true
+	 }
+	 worker.RunSSSPWorker(workerID, PartitionNum, is_rep)
 
-	worker.RunSSSPWorkerCUDA(workerID, PartitionNum)
+	//worker.RunSSSPWorkerCUDA(workerID, PartitionNum)
 	fmt.Println("stop")
 }
