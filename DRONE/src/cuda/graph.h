@@ -1,13 +1,13 @@
 #ifndef DRONE_CUDA_GRAPH
 #define DRONE_CUDA_GRAPH
 
-#include "nccl.h"
+//#include "nccl.h"
 
 #ifdef __cplusplus
 #define cplus __cplusplus
 #undef __cplusplus
 #endif
-//#include "nccl.h"
+#include "nccl.h"
 #ifdef cplus
 #define __cplusplus cplus
 #undef cplus
