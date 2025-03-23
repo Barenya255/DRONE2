@@ -17,8 +17,6 @@ target_link_libraries(PR_Lib nccl)
 add_library(ALG_COMMON_Lib algorithm/common.cu)
 #target_link_libraries(ALG_COMMON_Lib nccl)
 
-add_executable(DRONE_COMM nccl_test.cu)
-target_link_libraries(DRONE_COMM nccl)
 
 
 #set_target_properties(DRONE_COMM PROPERTIES CUDA_SEPARABLE_COMPILATION ON)
