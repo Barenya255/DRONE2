@@ -1,7 +1,7 @@
 package tools
 
 const (
-	ResultPath = "/BIGDATA1/acict_zguan_1/zpltys/graphs/generate/result/"
+	ResultPath = "/kaggle/working/DRONE2/DRONE/sbin"
 
 	//PatternPath = "../test_data/pattern.txt"
 	PatternPath              = "pattern.txt"
