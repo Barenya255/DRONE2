@@ -327,8 +327,9 @@ func (w *SSSPWorker) IncEval(ctx context.Context, args *pb.EmptyRequest) (*pb.In
 
 func (w *SSSPWorker) Assemble(ctx context.Context, args *pb.EmptyRequest) (*pb.AssembleResponse, error) {
 	var f *os.File
-
+	log.Printf("Assemble called on worker %d", w.selfId)
 	if w.alive {
+		log.Printf("Writing distance array %d", w.selfId)
 		f, _ = os.Create(tools.ResultPath + "/result_" + strconv.Itoa(w.selfId-1))
 
 		writer := bufio.NewWriter(f)
