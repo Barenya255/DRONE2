@@ -472,9 +472,9 @@ func RunJob(jobName string, workerNum, crashSuperstep, crashWorkerId int) {
 	}*/
 	//fmt.Printf("teps:%v\n", float64(mr.totalIteration) / runTime.Seconds())
 	log.Printf("teps:%v\n", float64(mr.totalIteration)/runTime.Seconds())
-	//mr.Assemble()
+	mr.Assemble()
 	mr.KillWorkers()
-	//mr.wait()
+	mr.wait()
 	log.Printf("Job finishes")
 }
 
