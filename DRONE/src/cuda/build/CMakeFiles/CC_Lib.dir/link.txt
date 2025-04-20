@@ -1,0 +1,2 @@
+/usr/bin/ar qc libCC_Lib.a CMakeFiles/CC_Lib.dir/algorithm/cc.cu.o
+/usr/bin/ranlib libCC_Lib.a

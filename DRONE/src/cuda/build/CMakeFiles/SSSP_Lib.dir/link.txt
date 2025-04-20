@@ -1,0 +1,2 @@
+/usr/bin/ar qc libSSSP_Lib.a CMakeFiles/SSSP_Lib.dir/algorithm/sssp.cu.o
+/usr/bin/ranlib libSSSP_Lib.a

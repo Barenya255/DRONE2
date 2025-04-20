@@ -1,0 +1,2 @@
+/usr/bin/ar qc libALG_COMMON_Lib.a CMakeFiles/ALG_COMMON_Lib.dir/algorithm/common.cu.o
+/usr/bin/ranlib libALG_COMMON_Lib.a

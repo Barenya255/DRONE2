@@ -1,0 +1,2 @@
+/usr/bin/ar qc libPR_Lib.a CMakeFiles/PR_Lib.dir/algorithm/pr.cu.o
+/usr/bin/ranlib libPR_Lib.a
