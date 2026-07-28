@@ -337,6 +337,7 @@ func (w *SSSPWorker) Assemble(ctx context.Context, args *pb.EmptyRequest) (*pb.A
 
 		for id, dist := range w.distance {
 			if !w.g.IsMirror(id) && dist != math.MaxFloat32 {
+			//if !w.g.IsMirror(id)  {
 				writer.WriteString(strconv.Itoa(id) + "\t" + strconv.FormatFloat(float64(dist), 'f', -1, 32) + "\n")
 			}
 		}
@@ -512,6 +513,7 @@ func RunSSSPWorker(id, partitionNum int, is_rep bool) {
 	registerClient := pb.NewMasterClient(masterHandle)
 	response, err := registerClient.Register(context.Background(), &pb.RegisterRequest{WorkerIndex: int32(w.selfId)})
 	if err != nil || !response.Ok {
+		log.Printf("Register failed: err=%v, response=%+v", err, response)
 		log.Fatal("error for register")
 	}
 

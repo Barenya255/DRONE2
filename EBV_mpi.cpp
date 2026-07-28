@@ -213,9 +213,16 @@ int main(int argc, char** argv) {
         if (fid == 0) {
             for (i = 0; i < fnum; i++) send_count[i] = 0;
 
-            unsigned long long end_idx = min(read_idx + max_batch_size * 3 * fnum, alledges);
+            unsigned long long end_idx = min(read_idx + max_batch_size * 4 * fnum, alledges);
             for (unsigned long long idx = read_idx; idx < end_idx; idx++) {
-                fscanf(fp, "%d%d%d", &u, &v, &w);
+                if (fscanf(fp, "%d%d", &u, &v) != 3) {
+                    printf("EBV_mpi: input ended at line %llu but --edges=%llu; edge count must equal the file's line count\n", idx, alledges);
+                    MPI_Abort(MPI_COMM_WORLD, 1);
+                }
+                if (u < 0 || u >= maxn || v < 0 || v >= maxn) {
+                    printf("EBV_mpi: vertex id out of range at line %llu: '%d %d' (--vertices=%d)\n", idx, u, v, maxn);
+                    MPI_Abort(MPI_COMM_WORLD, 1);
+                }
                 if (u == v) continue;
                 int rank = idx % fnum;
                 if (rank != 0) {
@@ -237,7 +244,6 @@ int main(int argc, char** argv) {
 
         } else {
             MPI_Recv(receive_buff[0], max_batch_size * 10, MPI_INT, 0, 99, MPI_COMM_WORLD, status);
-
             int recv_len;
             MPI_Get_count(status, MPI_INT, &recv_len);
 
@@ -277,6 +283,14 @@ int main(int argc, char** argv) {
 
     int batch_size = 10;
     int sum_batch = 0;
+    // has_buff/receive_buff hold 10*max_batch_size ints, but one round can
+    // accumulate up to 2*fnum*batch_size + 2 entries (batch_size edges
+    // received from each of fnum partitions) — cap the batch growth so that
+    // worst case always fits, for any process count
+    int safe_batch_max = max_batch_size;
+    if (2 * fnum * safe_batch_max + 2 > max_batch_size * 10) {
+        safe_batch_max = (max_batch_size * 10 - 2) / (2 * fnum);
+    }
     start = clock();
 
 //    printf("fid:%d edge_num:%d\n", fid, edge_num);
@@ -377,7 +391,7 @@ int main(int argc, char** argv) {
             }
         }
         sum_batch += batch_size;
-        if (batch_size < max_batch_size) batch_size = min(int(batch_size * 1.3), max_batch_size);
+        if (batch_size < safe_batch_max) batch_size = min(int(batch_size * 1.3), safe_batch_max);
         MPI_Barrier(MPI_COMM_WORLD);
     }
     finish = clock();
@@ -544,7 +558,7 @@ int main(int argc, char** argv) {
                 }
             }
             sum_batch += batch_size;
-            if (batch_size < max_batch_size) batch_size = min(int(batch_size * 1.3), max_batch_size);
+            if (batch_size < safe_batch_max) batch_size = min(int(batch_size * 1.3), safe_batch_max);
             MPI_Barrier(MPI_COMM_WORLD);
         }
 
@@ -556,11 +570,18 @@ int main(int argc, char** argv) {
 
     if (FLAGS_is_dump) {
         sum_batch = 0;
+        // the master-file write below can push up to (fnum+2) ints per vertex
+        // into a single worker's send buffer (capacity 10*max_batch_size) —
+        // shrink the per-rank window so any process count fits
+        int dump_batch = max_batch_size;
+        if (dump_batch * (fnum + 2) > max_batch_size * 10) {
+            dump_batch = (max_batch_size * 10) / (fnum + 2);
+        }
         while (sum_batch < maxn) {
 //			if (fid == 0) printf("fid:%d, sum_batch:%d, maxn:%d\n",fid, sum_batch, maxn);
 
             for (i = 0; i < fnum; i++) send_count[i] = 0;
-            for (i = sum_batch; i < min(sum_batch + max_batch_size * fnum, maxn); i++) {
+            for (i = sum_batch; i < min(sum_batch + dump_batch * fnum, maxn); i++) {
                 int rank = i % fnum;
                 if (rank == fid) vertex_id_buffer[send_count[fid]] = i;
                 send_edge_buff[rank][send_count[rank]++] = int(has[i]);
@@ -678,7 +699,7 @@ int main(int argc, char** argv) {
                 }
             }
 
-            sum_batch += max_batch_size * fnum;
+            sum_batch += dump_batch * fnum;
             MPI_Barrier(MPI_COMM_WORLD);
         }
 

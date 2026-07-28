@@ -14,7 +14,7 @@ int *part;
 void init(char* graph) {
 	if (strcmp(graph, "products") == 0) {maxn = 2449029; maxm = 64308169; nparts = 8;}
     if (strcmp(graph, "reddit") == 0) {maxn = 232965; maxm = 114615892; nparts = 4;}
-	if (strcmp(graph, "friend") == 0) {maxn = 65608366; maxm = 1806067135; nparts = 16;}
+	if (strcmp(graph, "pokec") == 0) {maxn = 1632804; maxm = 30622564; nparts = 3;}
 	if (strcmp(graph, "papers100M-bin") == 0) {maxn = 111059956; maxm = 1615685872; nparts = 16;}
 
 	printf("maxn:%d, maxm:%d\n", maxn, maxm);
@@ -52,13 +52,13 @@ void transfer2Ori()
     }
 }
 
-void generateInOutDegree()
+void generateInOutDegree(char** argv)
 {
     for (int i = 0; i < maxn; i++) {
         in_degree[i] = 0; out_degree[i] = 0;
     }
 
-    FILE *fp = fopen("edgelist.txt", "r");
+    FILE *fp = fopen(argv[1], "r");
     int u, v;
     while (~fscanf(fp, "%d%d", &u, &v)) {
         in_degree[u]++; out_degree[v]++;
@@ -465,7 +465,7 @@ void reduce_graph(char* filePath, int workerPerNode = 4) {
 
 int main(int argc,  char **argv)
 {
-	init("friend");
+	init("pokec");
 //    init("products");
 //    init("papers100M-bin");
 //    init("reddit");
@@ -474,8 +474,8 @@ int main(int argc,  char **argv)
 //	transfer2METIS_input();
 //	transfer2DRONE(false);
 //    METIS2DRONE();
-	convertDNE2PSHEP("DNE");
+//	convertDNE2PSHEP("DNE");
 //    nodecsv2txt(2449029);
-//    generateInOutDegree();
+    generateInOutDegree(argv);
 //    reduce_graph(argv[1], 4);
 }

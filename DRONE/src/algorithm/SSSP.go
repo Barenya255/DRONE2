@@ -63,7 +63,8 @@ func SSSP_PEVal(g graph.Graph, distance map[int]float32, startID int, updateMast
 	pq := make(PriorityQueue, 0)
 
 	for u := range nodes {
-		if u%100 == startID {
+		if u == startID {
+			log.Printf("The shit?? %v\n", u)
 			startPair := &Pair{
 				NodeId:   u,
 				Distance: 0,

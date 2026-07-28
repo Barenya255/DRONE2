@@ -55,7 +55,7 @@ int main (int argc, char *argv[])
 	/* I want to get an IPv4 IP address */
 	ifr.ifr_addr.sa_family = AF_INET;
 	/* I want IP address attached to "eth0" */
-	strncpy(ifr.ifr_name, "enp5s0", IFNAMSIZ-1);
+	strncpy(ifr.ifr_name, "ib0", IFNAMSIZ-1);
 	ioctl(fd, SIOCGIFADDR, &ifr);
 	close(fd);
 	char *IPaddress = inet_ntoa(((struct sockaddr_in *)&ifr.ifr_addr)->sin_addr);
@@ -153,7 +153,7 @@ int main (int argc, char *argv[])
 		/* send result */
 
 		strcat(workerConfig, IPaddress);
-		int port = my_rank + 15000;
+		int port = my_rank + 15004;
 		char portStr [10];
 		sprintf(portStr, ":%d", port);
 		strcat(workerConfig, portStr);

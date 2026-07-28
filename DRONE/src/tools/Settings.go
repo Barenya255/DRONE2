@@ -1,7 +1,7 @@
 package tools
 
 const (
-	ResultPath = "/kaggle/working/DRONE2/DRONE/sbin"
+	ResultPath = "/home/starplat/baselines/DRONE2/DRONE/sbin"
 
 	//PatternPath = "../test_data/pattern.txt"
 	PatternPath              = "pattern.txt"

@@ -194,6 +194,7 @@ func (mr *Master) KillWorkers() {
 
 			}(j)
 		}
+		log.Printf("here")
 		mr.wg.Wait()
 	}
 }
@@ -474,7 +475,8 @@ func RunJob(jobName string, workerNum, crashSuperstep, crashWorkerId int) {
 	log.Printf("teps:%v\n", float64(mr.totalIteration)/runTime.Seconds())
 	mr.Assemble()
 	mr.KillWorkers()
-	mr.wait()
+	log.Printf("here before wait")
+	// mr.wait()
 	log.Printf("Job finishes")
 }
 
